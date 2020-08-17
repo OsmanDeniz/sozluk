@@ -8,6 +8,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {CardTitle, CardSummary, CardContainer} from '../Components/card';
 import Text from '../Components/text';
+import {SimpleCardContainer, SimpleCardTitle} from '../Components/simple-card';
 
 const DATA = [
   {
@@ -77,36 +78,44 @@ function searchView({navigation}) {
       </Box>
       {/** Content */}
       <Box flex={1} pt={26} bg="softRed">
-        <Box py={40}>
-          <Box>
-            <Text color="textLight" px={25}>
-              Bir Deyim
-            </Text>
-            <CardContainer onPress={() => navigation.navigate('Detay')}>
-              <CardTitle>on para</CardTitle>
-              <CardSummary>cok az (para).</CardSummary>
-            </CardContainer>
+        {isSearchFocus ? (
+          <Box p={30} flex={1}>
+            <FlatList
+              data={DATA}
+              renderItem={({item}) => (
+                <SimpleCardContainer>
+                  <SimpleCardTitle>{item.title}</SimpleCardTitle>
+                </SimpleCardContainer>
+              )}
+              keyExtractor={(item) => item.id}
+              ListHeaderComponent={<Text color="textLight">Son Aramalar</Text>}
+            />
+            {/* <SimpleCardContainer>
+              <SimpleCardTitle>Kalem</SimpleCardTitle>
+            </SimpleCardContainer> */}
           </Box>
-          <Box mt={40}>
-            <Text color="textLight" px={25}>
-              Bir Deyim - Atasozu
-            </Text>
-            <CardContainer onPress={() => navigation.navigate('Detay')}>
-              <CardTitle>siyem siyem aglamak</CardTitle>
-              <CardSummary>hafif hafif, ince ince aglamak</CardSummary>
-            </CardContainer>
-          </Box>
-          {/* <FlatList
-            data={DATA}
-            renderItem={({item}) => (
-              <CardContainer>
-                <CardTitle>{item.title}</CardTitle>
-                <CardSummary>{item.summary}</CardSummary>
+        ) : (
+          <Box py={40}>
+            <Box>
+              <Text color="textLight" px={25}>
+                Bir Deyim
+              </Text>
+              <CardContainer onPress={() => navigation.navigate('Detay')}>
+                <CardTitle>on para</CardTitle>
+                <CardSummary>cok az (para).</CardSummary>
               </CardContainer>
-            )}
-            keyExtractor={(item) => item.id}
-          /> */}
-        </Box>
+            </Box>
+            <Box mt={40}>
+              <Text color="textLight" px={25}>
+                Bir Deyim - Atasozu
+              </Text>
+              <CardContainer onPress={() => navigation.navigate('Detay')}>
+                <CardTitle>siyem siyem aglamak</CardTitle>
+                <CardSummary>hafif hafif, ince ince aglamak</CardSummary>
+              </CardContainer>
+            </Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );
