@@ -10,15 +10,57 @@ import historyView from './Views/history';
 import Tabbar from './Components/tab-bar';
 import detailView from './Views/details';
 import theme from './utils/theme';
+import {Left, More} from './Components/icons';
+import Button from './Components/button';
 
 const searchStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function searchStackScreen() {
   return (
-    <searchStack.Navigator headerMode="none">
-      <searchStack.Screen name="Ara" component={searchView} />
-      <searchStack.Screen name="Detay" component={detailView} />
+    <searchStack.Navigator>
+      <searchStack.Screen
+        name="Ara"
+        component={searchView}
+        options={() => {
+          return {
+            headerShown: false,
+          };
+        }}
+      />
+      <searchStack.Screen
+        name="Detay"
+        component={detailView}
+        options={({route, navigation}) => {
+          return {
+            title: (route.params && route.params.title) || '',
+            headerStyle: {
+              backgroundColor: theme.colors.softRed,
+              shadowColor: 'transparent',
+            },
+            headerLeft: () => (
+              <Button
+                px={20}
+                height="100%"
+                onPress={() => {
+                  navigation.navigate('Ara');
+                }}>
+                <Left color={theme.colors.textDark} />
+              </Button>
+            ),
+            headerRight: () => (
+              <Button
+                px={20}
+                height="100%"
+                onPress={() => {
+                  navigation.navigate('Ara');
+                }}>
+                <More color={theme.colors.textDark} />
+              </Button>
+            ),
+          };
+        }}
+      />
     </searchStack.Navigator>
   );
 }

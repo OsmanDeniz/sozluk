@@ -98,9 +98,12 @@ function searchView({navigation}) {
           <Box py={40}>
             <Box>
               <Text color="textLight" px={25}>
-                Bir Deyim
+                Bir Kelime
               </Text>
-              <CardContainer onPress={() => navigation.navigate('Detay')}>
+              <CardContainer
+                onPress={() =>
+                  navigation.navigate('Detay', {title: 'on para'})
+                }>
                 <CardTitle>on para</CardTitle>
                 <CardSummary>cok az (para).</CardSummary>
               </CardContainer>
@@ -109,7 +112,10 @@ function searchView({navigation}) {
               <Text color="textLight" px={25}>
                 Bir Deyim - Atasozu
               </Text>
-              <CardContainer onPress={() => navigation.navigate('Detay')}>
+              <CardContainer
+                onPress={() =>
+                  navigation.navigate('Detay', {title: 'siyem siyem aglamak'})
+                }>
                 <CardTitle>siyem siyem aglamak</CardTitle>
                 <CardSummary>hafif hafif, ince ince aglamak</CardSummary>
               </CardContainer>
