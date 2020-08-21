@@ -14,8 +14,8 @@ import {Sound, Hand, Bookmark} from '../Components/icons';
 import theme from '../utils/theme';
 import LoaderText from '../Components/loader-text';
 function detailView({route}) {
-  //const keyword = route.params?.title;
-  const keyword = 'ocak';
+  const keyword = route.params?.title;
+  //const keyword = 'ocak';
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [data, setData] = React.useState(null);
 
