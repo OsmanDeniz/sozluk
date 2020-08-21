@@ -57,7 +57,14 @@ function SearchBox({onChangeFocus}) {
         )}
       </Box>
       {isFocus && (
-        <Button onPress={onCancel} px={20} height={52}>
+        <Button
+          flex={0.22}
+          onPress={onCancel}
+          px={20}
+          height={52}
+          bg="white"
+          borderRadius="normal"
+          ml={5}>
           <Text>Vazgec</Text>
         </Button>
       )}

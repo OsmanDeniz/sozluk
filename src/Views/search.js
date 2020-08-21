@@ -1,14 +1,15 @@
-import React, {useRef, useEffect} from 'react';
-import {StatusBar, FlatList} from 'react-native';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, {useEffect} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {StatusBar, ScrollView} from 'react-native';
+
+import Bg from '../Components/bg';
+import Box from '../Components/box';
 import {Logo} from '../Components/icons';
 import Search from '../Components/search';
-import Box from '../Components/box';
-import Bg from '../Components/bg';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFocusEffect} from '@react-navigation/native';
-import {CardTitle, CardSummary, CardContainer} from '../Components/card';
-import Text from '../Components/text';
-import {SimpleCardContainer, SimpleCardTitle} from '../Components/simple-card';
+import SuggestionCard from '../Components/suggestion-card';
+import SearchHistoryList from '../Components/search-history-list';
 
 const DATA = [
   {
@@ -48,21 +49,30 @@ function searchView({navigation}) {
   {
     /** Bu kisimda saat kismindaki renkler beyaz yapiliyor, siyah olmasi icin dark-content yapilmali */
   }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useFocusEffect(
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     React.useCallback(() => {
       StatusBar.setBarStyle('light-content');
     }, []),
   );
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isSearchFocus, setSearchFocus] = React.useState(false);
+
+  const [homeData, setHomeData] = React.useState(null);
+
+  const getHomeData = async () => {
+    const response = await fetch('https://sozluk.gov.tr/icerik');
+    const data = await response.json();
+    setHomeData(data);
+  };
+
+  React.useEffect(() => {
+    getHomeData();
+  }, []);
 
   return (
     <Box as={SafeAreaView} bg="red" flex={1}>
       <StatusBar barStyle="light-content" />
       {/* Header */}
-      <Box position="relative" zIndex={1} height={isSearchFocus ? 90 : 285}>
+      <Box position="relative" zIndex={1} height={isSearchFocus ? 110 : 285}>
         <Bg>
           {/** Logo */}
           <Box flex={1} alignItems="center" justifyContent="center">
@@ -71,54 +81,41 @@ function searchView({navigation}) {
 
           {/** Arama Kutusu */}
 
-          <Box p={16} width="100%" mb={-42}>
+          <Box p={16} width="100%" mb={-17}>
             <Search onChangeFocus={(status) => setSearchFocus(status)} />
           </Box>
         </Bg>
       </Box>
+
       {/** Content */}
       <Box flex={1} pt={26} bg="softRed">
         {isSearchFocus ? (
           <Box p={30} flex={1}>
-            <FlatList
-              data={DATA}
-              renderItem={({item}) => (
-                <SimpleCardContainer>
-                  <SimpleCardTitle>{item.title}</SimpleCardTitle>
-                </SimpleCardContainer>
-              )}
-              keyExtractor={(item) => item.id}
-              ListHeaderComponent={<Text color="textLight">Son Aramalar</Text>}
-            />
-            {/* <SimpleCardContainer>
-              <SimpleCardTitle>Kalem</SimpleCardTitle>
-            </SimpleCardContainer> */}
+            <SearchHistoryList data={DATA} />
           </Box>
         ) : (
           <Box py={40}>
-            <Box>
-              <Text color="textLight" px={25}>
-                Bir Kelime
-              </Text>
-              <CardContainer
+            <Box as={ScrollView}>
+              <SuggestionCard
+                title="Bir Kelime"
+                data={homeData?.kelime[0]}
                 onPress={() =>
-                  navigation.navigate('Detay', {title: 'on para'})
-                }>
-                <CardTitle>on para</CardTitle>
-                <CardSummary>cok az (para).</CardSummary>
-              </CardContainer>
-            </Box>
-            <Box mt={40}>
-              <Text color="textLight" px={25}>
-                Bir Deyim - Atasozu
-              </Text>
-              <CardContainer
+                  navigation.navigate('Detay', {
+                    title: homeData?.kelime[0].madde,
+                  })
+                }
+              />
+
+              <SuggestionCard
+                mt={40}
+                data={homeData?.atasoz[0]}
+                title="Bir Deyim - Atasozu"
                 onPress={() =>
-                  navigation.navigate('Detay', {title: 'siyem siyem aglamak'})
-                }>
-                <CardTitle>siyem siyem aglamak</CardTitle>
-                <CardSummary>hafif hafif, ince ince aglamak</CardSummary>
-              </CardContainer>
+                  navigation.navigate('Detay', {
+                    title: homeData?.atasoz[0].madde,
+                  })
+                }
+              />
             </Box>
           </Box>
         )}
